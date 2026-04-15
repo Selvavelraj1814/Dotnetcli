@@ -1,28 +1,21 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import type { Product } from "../../app/models/Product";
 import { Button, Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
+import { useFetchProductdetailsQuery } from "./catalogApi";
 
 export default function ProductDetails() {
 
   const {id} = useParams();
-  const [product, setProduct] = useState<Product | null>(null)
+  
+  const {data: product, isLoading} = useFetchProductdetailsQuery(id ? +id:0)
 
-  useEffect(()=>{
-    fetch(`https://localhost:5001/api/product/${id}`)
-    .then(response => response.json())
-    .then(data => setProduct(data))
-    .catch(error => console.log(error))
-  },[id])
-
-  if (!product) return <div>Loading...</div>
+  if (!product || isLoading) return <div>Loading Product...</div>
 
   const productDetails =[
-    {lable: 'Name', value: product.name},
-    {lable: 'Description', value: product.description},
-    {lable: 'Type', value: product.type},
-    {lable: 'Brand', value: product.brand},
-    {lable: 'Quantity in stock', value: product.name}
+    {label: 'Name', value: product.name},
+    {label: 'Description', value: product.description},
+    {label: 'Type', value: product.type},
+    {label: 'Brand', value: product.brand},
+    {label: 'Quantity in stock', value: product.quantityInStock}
   ]
 
   return (
@@ -41,7 +34,7 @@ export default function ProductDetails() {
             <TableBody>
               {productDetails.map((detail,index) =>(
               <TableRow key={index}>
-                <TableCell sx={{fontWeight: 'bold'}}>{detail.lable}</TableCell>
+                <TableCell sx={{fontWeight: 'bold'}}>{detail.label}</TableCell>
                 <TableCell>{detail.value}</TableCell>
               </TableRow>
             ))}

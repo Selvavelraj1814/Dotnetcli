@@ -19,10 +19,9 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(opt =>
 {
-   opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:5173");
+   opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:5173");
 });
 
-// Configure the HTTP request pipeline.
 app.MapControllers();
 
 DbInitializer.InitDb(app);

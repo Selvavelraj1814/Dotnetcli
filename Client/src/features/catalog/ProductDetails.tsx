@@ -10,11 +10,13 @@ export default function ProductDetails() {
   const [addBasketItem] = useAddBasketItemMutation();
   const {data: basket} = useFetchBasketQuery();
   const item = basket?.items.find(x => x.productId === +id!);
+
+  const basketQuantity = item?.quantity ?? 0;
   const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
-    if (item) setQuantity(item.quantity);
-  }, [item])
+    setQuantity(basketQuantity);
+  }, [basketQuantity])
   
   const {data: product, isLoading} = useFetchProductdetailsQuery(id ? +id:0)
 

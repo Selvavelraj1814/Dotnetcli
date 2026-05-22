@@ -1,6 +1,6 @@
 using System;
 
-namespace API.Entity;
+namespace API.Entities;
 
 public class Basket
 {

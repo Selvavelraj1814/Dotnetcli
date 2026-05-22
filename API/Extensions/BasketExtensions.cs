@@ -1,6 +1,6 @@
 using System;
 using API.DTOs;
-using API.Entity;
+using API.Entities;
 
 namespace API.Extensions;
 

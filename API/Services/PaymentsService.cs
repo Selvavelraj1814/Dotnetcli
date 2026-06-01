@@ -3,11 +3,11 @@ using Stripe;
 
 namespace API.Services;
 
-public class PaymentsServices(IConfiguration config)
+public class PaymentsServices
 {
     public async Task<PaymentIntent> CreateOrUpadatePaymentIntent(Basket basket)
     {
-        StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
+        StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 
         var service = new PaymentIntentService();
 

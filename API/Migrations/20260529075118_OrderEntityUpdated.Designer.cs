@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20260529075118_OrderEntityUpdated")]
+    partial class OrderEntityUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -437,13 +440,11 @@ namespace API.Migrations
                                 .IsRequired()
                                 .HasColumnType("TEXT");
 
-                            b1.Property<int>("Exp_Month")
-                                .HasColumnType("INTEGER")
-                                .HasJsonPropertyName("exp_month");
+                            b1.Property<int>("ExpMonth")
+                                .HasColumnType("INTEGER");
 
-                            b1.Property<int>("Exp_Year")
-                                .HasColumnType("INTEGER")
-                                .HasJsonPropertyName("exp_year");
+                            b1.Property<int>("ExpYear")
+                                .HasColumnType("INTEGER");
 
                             b1.Property<int>("Last4")
                                 .HasColumnType("INTEGER");

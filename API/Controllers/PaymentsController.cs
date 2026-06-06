@@ -11,7 +11,7 @@ using Stripe;
 
 namespace API.Controllers;
 
-public class PaymentsController(PaymentsServices paymentsServices, StoreContext context,
+public class PaymentsController(PaymentsService paymentsService, StoreContext context,
     IConfiguration config, ILogger<PaymentsController> logger) : BaseApiController
 {
     [Authorize]
@@ -22,7 +22,7 @@ public class PaymentsController(PaymentsServices paymentsServices, StoreContext 
 
         if (basket == null) return BadRequest("Problem with basket");
 
-        var intent = await paymentsServices.CreateOrUpadatePaymentIntent(basket);
+        var intent = await paymentsService.CreateOrUpadatePaymentIntent(basket);
 
         if (intent == null) return BadRequest("Problem creating payment intent");
 

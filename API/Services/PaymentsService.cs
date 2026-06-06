@@ -3,7 +3,7 @@ using Stripe;
 
 namespace API.Services;
 
-public class PaymentsServices
+public class PaymentsService
 {
     public async Task<PaymentIntent> CreateOrUpadatePaymentIntent(Basket basket)
     {

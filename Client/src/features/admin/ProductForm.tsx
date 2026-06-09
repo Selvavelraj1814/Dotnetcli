@@ -19,8 +19,8 @@ type Props = {
     setSelectedProduct: (value: Product | null) => void
 }
 
-export default function ProductForm({ setEditMode, product, refetch, setSelectedProduct}: Props) {
-    const { control, handleSubmit, reset, setError, formState: {isSubmitting}} = useForm<CreateProductSchema>({
+export default function ProductForm({ setEditMode, product, refetch, setSelectedProduct }: Props) {
+    const { control, handleSubmit, reset, setError, formState: { isSubmitting } } = useForm<CreateProductSchema>({
         mode: 'onTouched',
         resolver: zodResolver(createProductSchema),
     })
@@ -41,17 +41,20 @@ export default function ProductForm({ setEditMode, product, refetch, setSelected
 
     useEffect(() => {
         if (product) reset(product)
+    }, [product, reset,]);
 
+    useEffect(() => {
         return () => {
-        if (preview) {
-            URL.revokeObjectURL(preview);
-        }
-    };
-    }, [product, reset, preview]);
+            if (preview) URL.revokeObjectURL(preview);
+        };
+    })
 
     const createFormData = (items: FieldValues) => {
         const formData = new FormData();
         for (const key in items) {
+            if (key === 'file' && !(items[key] instanceof File))
+                continue;
+
             formData.append(key, items[key])
         }
 
@@ -62,9 +65,9 @@ export default function ProductForm({ setEditMode, product, refetch, setSelected
         try {
             const formData = createFormData(data);
 
-            if (watchFile) return formData.append('file', watchFile);
+            if (watchFile) formData.append('file', watchFile);
 
-            if (product) await updateProduct({id: product.id, data: formData}).unwrap();
+            if (product) await updateProduct({ id: product.id, data: formData }).unwrap();
             else await createProduct(formData).unwrap();
             setEditMode(false);
             setSelectedProduct(null);
@@ -130,8 +133,8 @@ export default function ProductForm({ setEditMode, product, refetch, setSelected
                     <Button onClick={() => setEditMode(false)} variant="contained" color="inherit">Cancel</Button>
                     <LoadingButton
                         loading={isSubmitting}
-                        variant="contained" 
-                        color="success" 
+                        variant="contained"
+                        color="success"
                         type="submit"
                     >
                         Submit

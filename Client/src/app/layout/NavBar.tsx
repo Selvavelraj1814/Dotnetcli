@@ -40,8 +40,8 @@ export default function NavBar() {
 
     return (
         <AppBar position="fixed">
-            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
-                <Box display='flex' alignContent='center'>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', minHeight: 64, alignContent: 'center' }}>
+                <Box display='flex' alignContent='center' alignItems='center'>
                     <Typography component={NavLink} sx={NavStyles} to='/' variant="h6">RE-STORE</Typography>
                     <IconButton onClick={() => dispatch(setDarkMode())}>
                         {darkMode ? <DarkMode /> : <LightMode sx={{ color: 'yellow' }} />}

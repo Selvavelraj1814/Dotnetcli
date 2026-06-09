@@ -14,7 +14,7 @@ export default function CheckoutSuccess() {
     <Container maxWidth='md'>
       <>
         <Typography variant="h4" gutterBottom fontWeight='bold'>
-          Thanks for your fake order
+          Thanks for your order!
         </Typography>
         <Typography variant="body1" color="textSecondary" gutterBottom>
           Your order <strong>#{order.id}</strong> will never be processed as this is a fake shop.

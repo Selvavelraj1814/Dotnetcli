@@ -130,7 +130,17 @@ export default function ProductForm({ setEditMode, product, refetch, setSelected
                     </Grid2>
                 </Grid2>
                 <Box display='flex' justifyContent='space-between' sx={{ mt: 3 }}>
-                    <Button onClick={() => setEditMode(false)} variant="contained" color="inherit">Cancel</Button>
+                    <Button 
+                        onClick={() => {
+                            setSelectedProduct(null);
+                            reset();
+                            setEditMode(false);
+                        }} 
+                        variant="contained" 
+                        color="inherit"
+                    >
+                        Cancel
+                    </Button>
                     <LoadingButton
                         loading={isSubmitting}
                         variant="contained"

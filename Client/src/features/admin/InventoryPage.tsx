@@ -1,14 +1,15 @@
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/store/Store"
 import { useFetchProductsQuery } from "../catalog/catalogApi";
 import { currencyFormat } from "../../lib/util";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, WarningAmber } from "@mui/icons-material";
 import AppPagination from "../../app/shared/components/AppPagination";
 import { setPageNumber } from "../catalog/catalogSlice";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
 import type { Product } from "../../app/models/Product";
 import { useDeleteProductMutation } from "./adminApi";
+import { toast } from "react-toastify";
 
 export default function InventoryPage() {
     const productParams = useAppSelector(state => state.catalog);
@@ -17,15 +18,32 @@ export default function InventoryPage() {
     const [editMode, setEditMode] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [deleteProduct] = useDeleteProductMutation();
+    const [open, setOpen] = useState(false);
 
     const handleSelectedProduct = (product: Product) => {
         setSelectedProduct(product);
         setEditMode(true);
     }
 
-    const handleDeleteProduct = async (id: number) => {
+    const handleOpenDelete = (product: Product) => {
+        setSelectedProduct(product);
+        setOpen(true);
+    }
+
+    const handleCloseDelete = () => {
+        setOpen(false);
+        setSelectedProduct(null);
+    }
+
+    const handleDeleteProduct = async () => {
+        if (!selectedProduct) return;
+
         try {
-            await deleteProduct(id);
+            await deleteProduct(selectedProduct.id).unwrap();
+
+            toast.success('Product was successfully deleted');
+
+            handleCloseDelete();
             refetch();
         } catch (error) {
             console.log(error);
@@ -84,10 +102,15 @@ export default function InventoryPage() {
                                 <TableCell align="center">{product.brand}</TableCell>
                                 <TableCell align="center">{product.quantityInStock}</TableCell>
                                 <TableCell align="right">
-                                    <Button onClick={() => handleSelectedProduct(product)} startIcon={<Edit />} />
-                                    <Button onClick={() => handleDeleteProduct(product.id)} startIcon={<Delete />} color="error" />
+                                    <Button
+                                        onClick={() => handleSelectedProduct(product)}
+                                        startIcon={<Edit />}
+                                    />
+                                    <Button
+                                        onClick={() => handleOpenDelete(product)}
+                                        startIcon={<Delete />} color="error"
+                                    />
                                 </TableCell>
-
                             </TableRow>
                         ))}
                     </TableBody>
@@ -101,6 +124,56 @@ export default function InventoryPage() {
                     )}
                 </Box>
             </TableContainer>
+            <Dialog
+                open={open}
+                onClose={handleCloseDelete}
+                maxWidth="xs"
+                fullWidth
+            >
+                <DialogTitle>
+                    <Box display="flex" alignItems="center" gap={1}>
+                        <WarningAmber color="error" />
+                        <Typography variant="h6">
+                            Delete product
+                        </Typography>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete
+                        <Typography
+                            component="span"
+                            fontWeight="bold"
+                            color="error"
+                        >
+                            {""} {selectedProduct?.name}
+                        </Typography>
+                    </DialogContentText>
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 2 }}
+                    >
+                        This action cannot be undone.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDelete}
+                        color="inherit"
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button
+                        onClick={handleDeleteProduct}
+                        color="error"
+                        variant="contained"
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
